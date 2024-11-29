@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guest | Kopkar Binus</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              inter: ["Inter"],
+              nunito: ["Nunito"],
+              poppins: ["Poppins"],
+            },
+            textUnderlineOffset: {
+              10: "10px",
+              12: "12px",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <header
+      class="flex gap-32 flex-wrap justify-center align-middle p-4 text-xl font-poppin font-medium text-center"
+    >
+      <a
+        href=""
+        class="flex content-center items-center w-20 ml-10 gap-5 font-inter"
+      >
+        <img src="./img/binuslogo.png" alt="" class="mb-3" />
+        <h1>KOPKAR</h1>
+      </a>
+
+      <nav class="ml-auto mt-4">
+        <ul class="flex gap-36 font-semibold">
+          <li class="hover:underline hover:underline-offset-12">
+            <a href="#">Layanan</a>
+          </li>
+          <li class="hover:underline hover:underline-offset-12">
+            <a href="#">Detail</a>
+          </li>
+          <li class="hover:underline hover:underline-offset-12">
+            <a href="register.html">Register</a>
+          </li>
+        </ul>
+      </nav>
+      <div class="hover:bg-slate-100/50 mt-1 mr-10 rounded-full h-12">
+        <ul class="flex gap-10">
+          <li class="">
+            <a href="register.html">
+              <img src="./img/profile.png" alt="" />
+            </a>
+          </li>
+        </ul>
+      </div>
+    </header>
+
+    <!-- BODY -->
+    <div class="flex flex-col font-poppns items-center mt-[75px] gap-10">
+      <p class="font-bold text-center text-4xl">
+        Berbagai produk layanan yang<span class="text-[#000aff]"> AMAN </span
+        >dan<span class="text-[#000aff]"> TERPERCAYA </span>
+      </p>
+      <p class="flex justify-center text-center text-2xl font-semibold w-[70%]">
+        Memenuhi permintaan dan kebutuhan mendesak Anda sambil menikmati opsi
+        pengembalian yang pasti dan fleksibel, bebas dari ketidaknyamanan apapun
+      </p>
+
+      <a
+        href="#"
+        class="bg-blue-200 text-black hover:bg-[#0176FF] hover:text-white transition-all ease-in-out duration-300 font-semibold font-inter rounded-2xl text-2xl p-5 mt-5"
+        >Lihat layanan pinjaman</a
+      >
+    </div>
+  </body>
+</html>
