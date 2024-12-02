@@ -1,10 +1,12 @@
-# duarr-kopkar v2
+# rtq
 
-> [!NOTE]
->
-> 1. Source code ini bersifat sebagai kerangka atau fondasi dan dapat di-custom sesuai kebutuhan.
->
-> 2. Sejak program ini dibuat hingga saat README ini ditulis, program telah diuji pada sistem operasi Windows saja. Seharusnya tidak ada masalah jika program dijalankan di server/cloud dengan sistem operasi berbasis Linux.
+## Tentang
+
+RTQ adalah sistem manajemen antrian yang dirancang agar dapat memberikan *reliability* tinggi dalam mengatur antrian secara *real-time*. RTQ dibuat sebagai upaya untuk mengatasi masalah ketidakefisienan di mana instansi pendidikan yang memiliki layanan konsultasi mahasiswa masih menggunakan cara manual untuk melayani antrian konsultasi, mulai dari ketika mahasiswa ingin mendaftarkan sesi konsultasi hingga proses konsultasi selesai.
+
+Tidak adanya sebuah sistem yang memberikan informasi terbaru secara *real-time* kepada mahasiswa seputar berapa panjang antrian saat ini, apakah masih dapat mendaftar konsultasi untuk hari itu atau tidak, kejelasan durasi konsultasi, dan masalah sejenis membuat proses konsultasi menjadi sulit karena ada faktor yang tidak bisa diprediksi (misal antrian hari itu sudah penuh atau masih dapat konsultasi), dan itu akan menyebabkan masalah lain (misal sulit memprediksi waktu perjalanan mahasiswa dari rumah ke kampus hanya untuk konsultasi, tapi ternyata sudah tidak bisa konsultasi karena antrian hari itu sudah penuh).
+
+Fungsi utama yang ingin dicapai oleh RTQ adalah memastikan hal-hal tersebut menjadi lebih terprediksi, meminimalisir kerugian waktu, tenaga, biaya transportasi demi kelancaran proses konsultasi.
 
 ## Cara menggunakan
 
@@ -13,7 +15,7 @@
 
 ```yaml
 C:\Users\galpt>go version
-go version go1.22.4 windows/amd64
+go version go1.23.3 windows/amd64
 ```
 
 3. Download repository ini, dan extract ZIP-nya di suatu folder kosong yang Anda inginkan.
@@ -23,7 +25,7 @@ go version go1.22.4 windows/amd64
 Berikut adalah tampilan saat program berhasil berjalan:
 
 ```yaml
-E:\GitHub\duarr-kopkar-v2>go run main.go
+D:\Disk D\GitHub\rtq>go run main.go
 Server started.
 Access on:
  - http://0.0.0.0:8080/
