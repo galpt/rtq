@@ -1,12 +1,10 @@
-# rtq
-
 ## Tentang
 
 RTQ adalah sistem manajemen antrian yang dirancang agar dapat memberikan *reliability* tinggi dalam mengatur antrian secara *real-time*. RTQ dibuat sebagai upaya untuk mengatasi masalah ketidakefisienan di mana instansi pendidikan yang memiliki layanan konsultasi mahasiswa masih menggunakan cara manual untuk melayani antrian konsultasi, mulai dari ketika mahasiswa ingin mendaftarkan sesi konsultasi hingga proses konsultasi selesai.
 
 Tidak adanya sebuah sistem yang memberikan informasi terbaru secara *real-time* kepada mahasiswa seputar berapa panjang antrian saat ini, apakah masih dapat mendaftar konsultasi untuk hari itu atau tidak, kejelasan durasi konsultasi, dan masalah sejenis membuat proses konsultasi menjadi sulit karena ada faktor yang tidak bisa diprediksi (misal antrian hari itu sudah penuh atau masih dapat konsultasi), dan itu akan menyebabkan masalah lain (misal sulit memprediksi waktu perjalanan mahasiswa dari rumah ke kampus hanya untuk konsultasi, tapi ternyata sudah tidak bisa konsultasi karena antrian hari itu sudah penuh).
 
-Fungsi utama yang ingin dicapai oleh RTQ adalah memastikan hal-hal tersebut menjadi lebih terprediksi, meminimalisir kerugian waktu, tenaga, biaya transportasi demi kelancaran proses konsultasi.
+Fungsi RTQ adalah memastikan proses konsultasi menjadi lebih terprediksi agar dapat meminimalisir kerugian waktu, tenaga, dan biaya transportasi dengan menjamin apakah mahasiswa dapat melakukan konsultasi atau tidak pada waktu yang diinginkan.
 
 ## Cara menggunakan
 
