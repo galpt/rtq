@@ -1,7 +1,7 @@
 package main
 
 import (
-	"boilerplate_golangfront/handlers"
+	"rtq/handlers"
 )
 
 const (

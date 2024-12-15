@@ -1,0 +1,5 @@
+{
+    "go.useLanguageServer": false,
+    "go.formatTool": "goimports",
+    "editor.formatOnSave": true
+}

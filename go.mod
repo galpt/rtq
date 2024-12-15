@@ -1,4 +1,4 @@
-module boilerplate_golangfront
+module rtq
 
 go 1.23
 

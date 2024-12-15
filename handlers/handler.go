@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -40,36 +41,59 @@ func RenderSettings(c *gin.Context) {
 	c.HTML(200, "settings.html", gin.H{})
 }
 
+func ApiStatus(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"message": fmt.Sprintf("Server time: %v", time.Now().UTC().Format(time.RFC850)),
+	})
+}
+
 func HandleRegistrasi(c *gin.Context) {
 	var (
-		acc Account
+		acc Mahasiswa
 	)
 
 	c.Bind(&acc)
 
-	// tes print data dari form ke console
-	templatePrint := fmt.Sprintf("Nama: %v\nEmail: %v\nUsername: %v\nPassword: %v\nNoHandphone: %v\n", acc.Nama, acc.Email, acc.Username, acc.Password, acc.NoHandphone)
-	fmt.Println("--- Test Registrasi ---")
-	fmt.Println(templatePrint)
-	fmt.Println("--- --- ---")
+	// Generate nomor antrian
+	now := time.Now()
+	formattedTime := now.Format("20060102")
+	maxAntrianData, err := getFromDB("config:maxantrian")
+	handleError(err)
 
-	// tambah data ke DB
-	writeToDB(fmt.Sprintf("acc.user.%v.pass", acc.Username), acc.Password)
-	writeToDB(fmt.Sprintf("acc.user.%v.nama", acc.Username), acc.Nama)
-	writeToDB(fmt.Sprintf("acc.user.%v.email", acc.Username), acc.Email)
-	writeToDB(fmt.Sprintf("acc.user.%v.nohp", acc.Username), fmt.Sprintf("%v", acc.NoHandphone))
+	maxAntrianStr, ok := maxAntrianData.(string) // Type assertion to get the string
+	if !ok {
+		c.JSON(400, gin.H{"message": "maxantrian is not string"})
+	}
+
+	maxAntrian, err := strconv.Atoi(maxAntrianStr)
+	handleError(err)
+
+	antrianPrefix := fmt.Sprintf("antrian:%v", formattedTime)
+	antrianData, err := getAllKeysWithPrefix(antrianPrefix)
+	handleError(err)
+
+	if len(antrianData) >= maxAntrian {
+		c.JSON(400, gin.H{"message": "Maaf pendaftaran antrian sudah penuh untuk hari ini"})
+		return
+	}
+
+	nomorAntrian := fmt.Sprintf("%03d", len(antrianData)+1) // Misal: 001, 002, dst.
+
+	// Create data antrian
+	newAntrian := Antrian{
+		NoAntrian:     nomorAntrian,
+		Nim:           acc.Nim,
+		SudahDilayani: false,
+		WaktuAntri:    time.Now().Format(time.RFC3339),
+	}
+
+	// Simpan data ke DB
+	writeToDB(fmt.Sprintf("mahasiswa:%v", acc.Nim), acc)
+	writeToDB(fmt.Sprintf("antrian:%v:%v", formattedTime, nomorAntrian), newAntrian)
 
 	c.JSON(200, gin.H{
-		"Nama":        acc.Nama,
-		"Email":       acc.Email,
-		"Username":    acc.Username,
-		"Password":    acc.Password,
-		"NoHandphone": acc.NoHandphone,
-	})
-}
-
-func ApiStatus(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"message": fmt.Sprintf("Server time: %v", time.Now().UTC().Format(time.RFC850)),
+		"message":       "Pendaftaran Berhasil",
+		"nomor_antrian": nomorAntrian,
+		"durasi":        "10:00-10:45", // harusnya ini ditaruh di logic
 	})
 }
