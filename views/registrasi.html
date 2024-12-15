@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Pendaftaran Konsultasi</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto p-4 md:p-8">
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Pendaftaran Konsultasi</h1>
+
+        <form method="post" action="/register" class="mb-8 bg-white shadow-md rounded px-8 pt-6 pb-8">
+
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="nim">Masukkan NIM</label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    type="text" name="nim" required>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="nama">Masukkan Nama</label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    type="text" name="nama" required>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="jurusan">Pilih Jurusan</label>
+                <select
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="jurusan" name="jurusan" required>
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="System Information">System Information</option>
+                    <option value="International Relations">International Relations</option>
+                </select>
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Pilih Jenis Konsultasi:</label>
+                <div class="flex items-center space-x-4">
+                    <input class="mr-1" type="radio" name="jeniskonsul" value="Akademik" required>
+                    <label class="text-gray-700" for="akademik">Akademik</label>
+                    <input class="mr-1" type="radio" name="jeniskonsul" value="Non-akademik" required>
+                    <label class="text-gray-700" for="non-akademik">Non-akademik</label>
+                </div>
+            </div>
+            <button type="submit"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Daftar
+                Konsultasi</button>
+        </form>
+    </div>
+</body>
+
+</html>

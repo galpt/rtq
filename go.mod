@@ -5,6 +5,7 @@ go 1.23
 require (
 	github.com/dgraph-io/badger/v4 v4.2.0
 	github.com/gin-gonic/gin v1.10.0
+	gopkg.in/yaml.v2 v2.2.8
 )
 
 require (

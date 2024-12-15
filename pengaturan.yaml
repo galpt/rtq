@@ -1,0 +1,45 @@
+sasc:
+  jam_operasional:
+    senin_kamis:
+      mulai: "09:00"
+      istirahat_mulai: "12:00"
+      istirahat_selesai: "13:00"
+      selesai: "17:00"
+    jumat:
+      mulai: "09:00"
+      istirahat_mulai: "11:30"
+      istirahat_selesai: "13:00"
+      selesai: "17:00"
+    sabtu:
+      mulai: "09:00"
+      istirahat_mulai: "12:00"
+      istirahat_selesai: "13:00"
+      selesai: "15:00"
+  durasi_konsultasi: 45 # dalam menit
+  max_mahasiswa_hari: 8
+
+jurusan:
+  "Computer Science":
+    konsultasi:
+      akademik:
+        konselor:
+          - "Kak Ita"
+          - "Kak Budi"
+      non-akademik:
+        konselor:
+          - "Kak Dimas"
+  "System Information":
+    konsultasi:
+      akademik:
+        konselor:
+          - "Kak Ica"
+  "International Relations":
+    konsultasi:
+      non-akademik:
+        konselor:
+          - "Kak Vivi"
+  "Psychology":
+      konsultasi:
+          non-akademik:
+            konselor:
+               - "Kak Yanti"
