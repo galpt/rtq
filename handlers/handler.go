@@ -28,7 +28,7 @@ func HandleRegistrasi(c *gin.Context) {
 	now := time.Now()
 	formattedTime := now.Format("20060102")
 
-	config := getServer(c).Config // ambil config dari server
+	config := GetServer(c).Config // ambil config dari server
 
 	antrianPrefix := fmt.Sprintf("antrian:%v", formattedTime)
 	antrianData, err := getAllKeysWithPrefix(antrianPrefix)
@@ -57,7 +57,7 @@ func HandleRegistrasi(c *gin.Context) {
 }
 
 func RenderHomeWithAntrian(c *gin.Context) {
-	config := getServer(c).Config // ambil config dari server
+	config := GetServer(c).Config // ambil config dari server
 
 	antrianDataGrouped := make(map[string]map[string][]struct {
 		NoAntrian     string
@@ -219,7 +219,7 @@ func ApiStatus(c *gin.Context) {
 }
 
 // Helper function to get server instance from context
-func getServer(c *gin.Context) *Server {
+func GetServer(c *gin.Context) *Server {
 
 	server, exists := c.Keys["server"].(*Server)
 
