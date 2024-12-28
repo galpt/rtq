@@ -13,7 +13,7 @@ Fungsi RTQ adalah memastikan proses konsultasi menjadi lebih terprediksi agar da
 
 ```yaml
 C:\Users\galpt>go version
-go version go1.23.3 windows/amd64
+go version go1.23.4 windows/amd64
 ```
 
 3. Download repository ini, dan extract ZIP-nya di suatu folder kosong yang Anda inginkan.
@@ -24,10 +24,7 @@ Berikut adalah tampilan saat program berhasil berjalan:
 
 ```yaml
 D:\Disk D\GitHub\rtq>go run main.go
-Server started.
-Access on:
- - http://0.0.0.0:8080/
- - http://127.0.0.1:8080/
+Server jalan di 0.0.0.0:8080
 ```
 
 > [!IMPORTANT]
