@@ -44,6 +44,14 @@ func splitStr(sebuahString string, pemisahString string) []string {
 	return split
 }
 
+// fungsi untuk split pengaturan.txt atau data_mahasiswa.txt
+func splitFormatPengaturan(sebuahString string, namaData string) []string {
+	split1 := splitStr(sebuahString, fmt.Sprintf("%v=[", namaData))
+	split2 := splitStr(split1[1], "]")
+	split3 := splitStr(split2[0], "|")
+	return split3
+}
+
 // fungsi untuk cek apakah file sudah ada
 func cekApakahFileAda(namaFile string) bool {
 	cekNamaFile, err := afero.Exists(osFS, namaFile)
@@ -200,16 +208,12 @@ func buatTablePerJurusan(lokasiFolder string, namaJurusan string, hariTanggal st
 
 	// dapatkan nama konselor
 	bacaPengaturanTxtString := bacaFileReturnString(namaFilePengaturan)
-	splitJurusan1 := splitStr(bacaPengaturanTxtString, "jurusan=[")
-	splitJurusan2 := splitStr(splitJurusan1[1], "]")
-	splitJurusan3 := splitStr(splitJurusan2[0], "|")
-	splitKonselor1 := splitStr(bacaPengaturanTxtString, "namakonselor=[")
-	splitKonselor2 := splitStr(splitKonselor1[1], "]")
-	splitKonselor3 := splitStr(splitKonselor2[0], "|")
+	splitJurusan := splitFormatPengaturan(bacaPengaturanTxtString, "jurusan")
+	splitKonselor := splitFormatPengaturan(bacaPengaturanTxtString, "namakonselor")
 	namaKonselor := ""
-	for idxKonselor := range splitJurusan3 {
-		if splitJurusan3[idxKonselor] == namaJurusan {
-			namaKonselor = splitKonselor3[idxKonselor]
+	for idxKonselor := range splitJurusan {
+		if splitJurusan[idxKonselor] == namaJurusan {
+			namaKonselor = splitKonselor[idxKonselor]
 			break
 		}
 	}
@@ -232,13 +236,9 @@ func buatTablePerJurusan(lokasiFolder string, namaJurusan string, hariTanggal st
 			mhsNim = "Belum ada antrian"
 			mhsNama = "Belum ada antrian"
 		} else {
-
-			splitDataMhs1 := splitStr(dataMhs, "nimnama=[")
-			splitDataMhs2 := splitStr(splitDataMhs1[1], "]")
-			splitDataMhs3 := splitStr(splitDataMhs2[0], "|")
-
-			mhsNim = splitDataMhs3[0]
-			mhsNama = splitDataMhs3[1]
+			splitDataMhs := splitFormatPengaturan(dataMhs, "nimnama")
+			mhsNim = splitDataMhs[0]
+			mhsNama = splitDataMhs[1]
 		}
 
 		templatePerBaris := fmt.Sprintf(`<tr

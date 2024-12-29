@@ -37,23 +37,18 @@ func bacaPengaturan() {
 		if !cekApakahFolderAda(arrayHari[idxHari]) {
 
 			// step 2. bikin folder jurusan di dalam folder db untuk hari ini, besok, lusa
-			splitJurusan1 := splitStr(bacaPengaturanTxtString, "jurusan=[")
-			splitJurusan2 := splitStr(splitJurusan1[1], "]")
-			splitJurusan3 := splitStr(splitJurusan2[0], "|")
-
-			splitJamKonsul1 := splitStr(bacaPengaturanTxtString, "jamkonsul=[")
-			splitJamKonsul2 := splitStr(splitJamKonsul1[1], "]")
-			splitJamKonsul3 := splitStr(splitJamKonsul2[0], "|")
+			splitJurusan := splitFormatPengaturan(bacaPengaturanTxtString, "jurusan")
+			splitJamKonsul := splitFormatPengaturan(bacaPengaturanTxtString, "jamkonsul")
 
 			// looping sesuai jumlah jurusan yang dimasukkin
-			for idxJurusan := range splitJurusan3 {
+			for idxJurusan := range splitJurusan {
 
-				bikinFolderBaru(arrayHari[idxHari] + fmt.Sprintf("/%v", splitJurusan3[idxJurusan]))
+				bikinFolderBaru(arrayHari[idxHari] + fmt.Sprintf("/%v", splitJurusan[idxJurusan]))
 
 				// step 3. bikin folder jam konsul di dalam folder tiap jurusan
 				// looping sesuai jumlah jurusan yang dimasukkin
-				for idxJamKonsul := range splitJamKonsul3 {
-					bikinFolderBaru(arrayHari[idxHari] + fmt.Sprintf("/%v/%v", splitJurusan3[idxJurusan], splitJamKonsul3[idxJamKonsul]))
+				for idxJamKonsul := range splitJamKonsul {
+					bikinFolderBaru(arrayHari[idxHari] + fmt.Sprintf("/%v/%v", splitJurusan[idxJurusan], splitJamKonsul[idxJamKonsul]))
 				}
 			}
 
