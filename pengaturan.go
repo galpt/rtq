@@ -4,23 +4,6 @@ import (
 	"fmt"
 )
 
-const (
-	namaFilePengaturan    = "./pengaturan.txt"
-	namaFileDataMahasiswa = "data_mahasiswa.txt"
-	folderDB              = "./db"
-)
-
-var (
-	templateDefaultPengaturan = `// harus dipisah dengan tanda '|'
-jurusan=[Computer Science|Information Systems|International Relations]
-
-// nama konselor harus berurutan dengan posisi 'jurusan' yang diisi di atas
-namakonselor=[Ita|Ika|Agus]
-
-// jam konsul sesuaikan dengan format seperti ini
-jamkonsul=[09.00-09.45|09.45-10.30|10.30-11.15|11.15-12.00|13.00-13.45|13.45-14.30|14.30-15.15|15.15-16.00]`
-)
-
 func cekPengaturan() {
 
 	// kalo misalnya gada file "pengaturan.txt"
@@ -42,34 +25,39 @@ func cekPengaturan() {
 }
 
 func bacaPengaturan() {
+
+	var arrayHari = []string{folderDBHariIni, folderDBBesok, folderDBLusa}
+
 	// kita baca dulu file "pengaturan.txt"
 	bacaPengaturanTxtString := bacaFileReturnString(namaFilePengaturan)
 
-	// step 1. kalo misalnya folder 'db' tidak ada maka bikin baru
-	if !cekApakahFolderAda(folderDB) {
-		bikinFolderBaru(folderDB)
+	for idxHari := range arrayHari {
 
-		// step 2. bikin folder jurusan di dalam folder db
-		splitJurusan1 := splitStr(bacaPengaturanTxtString, "jurusan=[")
-		splitJurusan2 := splitStr(splitJurusan1[1], "]")
-		splitJurusan3 := splitStr(splitJurusan2[0], "|")
+		// step 1. kalo misalnya folder 'db' tidak ada maka bikin baru
+		if !cekApakahFolderAda(arrayHari[idxHari]) {
 
-		splitJamKonsul1 := splitStr(bacaPengaturanTxtString, "jamkonsul=[")
-		splitJamKonsul2 := splitStr(splitJamKonsul1[1], "]")
-		splitJamKonsul3 := splitStr(splitJamKonsul2[0], "|")
+			// step 2. bikin folder jurusan di dalam folder db untuk hari ini, besok, lusa
+			splitJurusan1 := splitStr(bacaPengaturanTxtString, "jurusan=[")
+			splitJurusan2 := splitStr(splitJurusan1[1], "]")
+			splitJurusan3 := splitStr(splitJurusan2[0], "|")
 
-		// looping sesuai jumlah jurusan yang dimasukkin
-		for idxJurusan := range splitJurusan3 {
+			splitJamKonsul1 := splitStr(bacaPengaturanTxtString, "jamkonsul=[")
+			splitJamKonsul2 := splitStr(splitJamKonsul1[1], "]")
+			splitJamKonsul3 := splitStr(splitJamKonsul2[0], "|")
 
-			bikinFolderBaru(folderDB + fmt.Sprintf("/%v", splitJurusan3[idxJurusan]))
-
-			// step 3. bikin folder jam konsul di dalam folder tiap jurusan
 			// looping sesuai jumlah jurusan yang dimasukkin
-			for idxJamKonsul := range splitJamKonsul3 {
-				bikinFolderBaru(folderDB + fmt.Sprintf("/%v/%v", splitJurusan3[idxJurusan], splitJamKonsul3[idxJamKonsul]))
-			}
-		}
+			for idxJurusan := range splitJurusan3 {
 
+				bikinFolderBaru(arrayHari[idxHari] + fmt.Sprintf("/%v", splitJurusan3[idxJurusan]))
+
+				// step 3. bikin folder jam konsul di dalam folder tiap jurusan
+				// looping sesuai jumlah jurusan yang dimasukkin
+				for idxJamKonsul := range splitJamKonsul3 {
+					bikinFolderBaru(arrayHari[idxHari] + fmt.Sprintf("/%v/%v", splitJurusan3[idxJurusan], splitJamKonsul3[idxJamKonsul]))
+				}
+			}
+
+		}
 	}
 
 }
