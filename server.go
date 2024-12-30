@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -39,7 +40,7 @@ func startServer() {
 		var form FormDaftarKonsul
 		c.Bind(&form)
 
-		c.Data(http.StatusOK, "text/html; charset=utf-8", stb(simpanAntrian(form.Nim, form.Nama, form.Jurusan, form.JamKonsul, form.JenisKonsul)))
+		c.Data(http.StatusOK, "text/html; charset=utf-8", stb(simpanAntrian(form.Nim, strings.ToUpper(form.Nama), form.Jurusan, form.JamKonsul, strings.ToUpper(form.JenisKonsul))))
 	})
 
 	fmt.Println()

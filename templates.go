@@ -128,7 +128,7 @@ jamkonsul=[09.00-09.45|09.45-10.30|10.30-11.15|11.15-12.00|13.00-13.45|13.45-14.
                     required>
                     <option value="" disabled>Pilih jenis konsultasi</option>
                     <option value="akademik">Akademik</option>
-                    <option value="nonakademik">Non-akademik</option>
+                    <option value="non-akademik">Non-akademik</option>
                 </select>
             </div>
 
