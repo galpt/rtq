@@ -1,15 +1,20 @@
 package main
 
+import "time"
+
 // bagian ini untuk semua data yang bersifat template
 
 const (
-	namaFilePengaturan    = "./pengaturan.txt"
-	namaFileDataMahasiswa = "data_mahasiswa.txt"
-	folderDB              = "./db"
-	folderDBHariIni       = "./db/hariini"
-	folderDBBesok         = "./db/besok"
-	folderDBLusa          = "./db/lusa"
-	totalHari             = 3
+	timeFormat             = time.RFC3339
+	namaFilePengaturan     = "./pengaturan.txt"
+	namaFileDataMahasiswa  = "data_mahasiswa.txt"
+	namaFileWaktuReservasi = "waktu_reservasi.txt"
+	namaFileJenisKonsul    = "jenis_konsul.txt"
+	folderDB               = "./db"
+	folderDBHariIni        = "./db/hariini"
+	folderDBBesok          = "./db/besok"
+	folderDBLusa           = "./db/lusa"
+	totalHari              = 3
 )
 
 const (
@@ -90,13 +95,13 @@ jamkonsul=[09.00-09.45|09.45-10.30|10.30-11.15|11.15-12.00|13.00-13.45|13.45-14.
             <h1 class="text-2xl font-bold">Daftar Konsultasi</h1>
         </div>
 
-        <form class="space-y-6">
+        <form class="space-y-6" action="/daftar" method="post">
             <!-- NIM Input -->
             <div class="space-y-2">
                 <label for="nim" class="block text-sm font-medium text-gray-700">
                     NIM (Nomor Induk Mahasiswa)
                 </label>
-                <input type="text" id="nim"
+                <input type="text" id="nim" name="nim"
                     class="w-full rounded-lg border-2 border-gray-200 p-3 text-gray-700 focus:border-blue-500 focus:outline-none transition duration-200"
                     placeholder="Masukkan NIM" required>
             </div>
@@ -106,52 +111,35 @@ jamkonsul=[09.00-09.45|09.45-10.30|10.30-11.15|11.15-12.00|13.00-13.45|13.45-14.
                 <label for="name" class="block text-sm font-medium text-gray-700">
                     Nama
                 </label>
-                <input type="text" id="name"
+                <input type="text" id="name" name="name"
                     class="w-full rounded-lg border-2 border-gray-200 p-3 text-gray-700 focus:border-blue-500 focus:outline-none transition duration-200"
                     placeholder="Masukkan nama lengkap" required>
             </div>
 
-            <!-- Major Select -->
+            (REPLACE-INI-DENGAN-DROPDOWN-MENU)
+
+            <!-- Pilih jenis konsultasi -->
             <div class="space-y-2">
-                <label for="major" class="block text-sm font-medium text-gray-700">
-                    Jurusan
+                <label for="jenis_konsultasi" class="block text-sm font-medium text-gray-700">
+                    Jenis Konsultasi
                 </label>
-                <select id="major"
+                <select id="jenis_konsultasi" name="jenis_konsultasi"
                     class="w-full rounded-lg border-2 border-gray-200 p-3 text-gray-700 focus:border-blue-500 focus:outline-none transition duration-200"
                     required>
-                    <option value="" disabled>Pilih jurusan</option>
-                    <option value="cs">Computer Science</option>
-                    <option value="is">System Information</option>
-                    <option value="ir">International Relations</option>
+                    <option value="" disabled>Pilih jenis konsultasi</option>
+                    <option value="akademik">Akademik</option>
+                    <option value="nonakademik">Non-akademik</option>
                 </select>
             </div>
 
-            <!-- Pilih jam konsul -->
-            <div class="space-y-2">
-                <label for="major" class="block text-sm font-medium text-gray-700">
-                    Jam Konsultasi
-                </label>
-                <select id="major"
-                    class="w-full rounded-lg border-2 border-gray-200 p-3 text-gray-700 focus:border-blue-500 focus:outline-none transition duration-200"
-                    required>
-                    <option value="" disabled>Pilih jam konsultasi</option>
-                    <option value="09.00-09.45">09.00-09.45</option>
-                    <option value="09.45-10.30">09.45-10.30</option>
-                    <option value="10.30-11.15">10.30-11.15</option>
-                </select>
-            </div>
-
-            <!-- Buttons -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
-                <button type="button"
+            <!-- Tombol daftar -->
+            <div class="mt-8">
+                <button type="submit" formmethod="post" type="button"
                     class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 transform hover:-translate-y-1 hover:shadow-lg">
-                    Konsultasi Akademik
-                </button>
-                <button type="button"
-                    class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 transform hover:-translate-y-1 hover:shadow-lg">
-                    Konsultasi Non-Akademik
+                    Daftar
                 </button>
             </div>
+            
         </form>
     </div>
 </body>
@@ -182,4 +170,49 @@ jamkonsul=[09.00-09.45|09.45-10.30|10.30-11.15|11.15-12.00|13.00-13.45|13.45-14.
 </body>
 
 </html>`
+
+	alertSuksesDaftarKonsul = `<div id="alert-3"
+            class="flex items-center p-4 mb-4 text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400"
+            role="alert">
+            <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                viewBox="0 0 20 20">
+                <path
+                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+            </svg>
+            <span class="sr-only">Info</span>
+            <div class="ms-3 text-sm font-medium">
+                Berhasil mendaftarkan pada sesi yang diinginkan.
+            </div>
+        </div>`
+
+	alertGagalDaftarKonsul = `<div id="alert-2"
+            class="flex items-center p-4 mb-4 text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+            role="alert">
+            <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                viewBox="0 0 20 20">
+                <path
+                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+            </svg>
+            <span class="sr-only">Info</span>
+            <div class="ms-3 text-sm font-medium">
+                Cek kembali daftar antrian, mungkin sesi tersebut sudah direservasi oleh
+                orang lain. <a href="/daftar" class="font-semibold underline hover:no-underline">Kembali ke halaman
+                    daftar konsultasi</a>.
+            </div>
+        </div>`
+
+	alertMenyiapkanDaftarAntrian = `<div id="alert-4"
+            class="flex items-center p-4 mb-4 text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
+            role="alert">
+            <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                viewBox="0 0 20 20">
+                <path
+                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+            </svg>
+            <span class="sr-only">Info</span>
+            <div class="ms-3 text-sm font-medium">
+                Daftar antrian sedang disiapkan. Mohon refresh halaman ini setelah beberapa detik. <a href="/antrian"
+                    class="font-semibold underline hover:no-underline">Refresh kembali</a>.
+            </div>
+        </div>`
 )

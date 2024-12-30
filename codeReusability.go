@@ -11,8 +11,17 @@ import (
 )
 
 var (
-	osFS = afero.NewOsFs()
+	osFS        = afero.NewOsFs()
+	lockAntrian = false
 )
+
+// fungsi-fungsi lockAntrian
+func kunciAntrian() {
+	lockAntrian = true
+}
+func bukaAntrian() {
+	lockAntrian = false
+}
 
 // string-to-byte (stb)
 // fungsi untuk ubah string jadi byte
@@ -34,8 +43,16 @@ func printApapun(sebuahData any) {
 // ini kalau terjadi error, maka program langsung exit
 func handleErrorFatal(sebuahError error) {
 	if sebuahError != nil {
+		bukaAntrian()
+		log.Println(fmt.Sprintf("Error fatal : %v", sebuahError))
 		log.Fatal(sebuahError)
 	}
+}
+
+// fungsi untuk strings.ReplaceAll() otomatis return string
+func replaceSemua(sebuahString string, teksYangMauDiganti string, gantiDenganApa string) string {
+	replace := strings.ReplaceAll(sebuahString, teksYangMauDiganti, gantiDenganApa)
+	return replace
 }
 
 // fungsi untuk split string
@@ -47,7 +64,15 @@ func splitStr(sebuahString string, pemisahString string) []string {
 // fungsi untuk split pengaturan.txt atau data_mahasiswa.txt
 func splitFormatPengaturan(sebuahString string, namaData string) []string {
 	split1 := splitStr(sebuahString, fmt.Sprintf("%v=[", namaData))
+	// Validasi apakah split1 memiliki setidaknya 2 elemen
+	if len(split1) < 2 {
+		return []string{} // return slice kosong jika tidak ada elemen dengan index 1
+	}
+
 	split2 := splitStr(split1[1], "]")
+	if len(split2) < 1 {
+		return []string{} // return slice kosong jika tidak ada elemen dengan index 1
+	}
 	split3 := splitStr(split2[0], "|")
 	return split3
 }
@@ -97,8 +122,11 @@ func bikinFileBaru(namaFile string) bool {
 
 		fmt.Println(fmt.Sprintf("Membuat file %v", namaFile))
 
-		bikinFile, err := osFS.Create(namaFilePengaturan)
-		handleErrorFatal(err)
+		bikinFile, err := osFS.Create(namaFile)
+		if err != nil {
+			log.Println(fmt.Sprintf("Error membuat file: %v", err))
+			return false
+		}
 
 		closeFile := bikinFile.Close()
 		handleErrorFatal(closeFile)
@@ -120,7 +148,10 @@ func tulisStringKeFile(namaFile string, dataString string) bool {
 	if cekApakahFileAda(namaFile) {
 
 		tulisFile := afero.WriteFile(osFS, namaFile, stb(dataString), 0777)
-		handleErrorFatal(tulisFile)
+		if tulisFile != nil {
+			log.Println(fmt.Sprintf("Error menulis string ke file: %v", tulisFile))
+			return false
+		}
 
 		// kalau ga error return 'true'
 		return true
@@ -137,7 +168,10 @@ func tulisByteKeFile(namaFile string, dataBytes []byte) bool {
 	if cekApakahFileAda(namaFile) {
 
 		tulisFile := afero.WriteFile(osFS, namaFile, dataBytes, 0777)
-		handleErrorFatal(tulisFile)
+		if tulisFile != nil {
+			log.Println(fmt.Sprintf("Error menulis byte ke file: %v", tulisFile))
+			return false
+		}
 
 		// kalau ga error return 'true'
 		return true
@@ -188,6 +222,17 @@ func bacaFolder(namaFolder string) []os.FileInfo {
 	return cekFolder
 }
 
+// fungsi untuk hapus file atau folder
+func hapusSemua(sebuahLokasi string) bool {
+	hapus := osFS.RemoveAll(sebuahLokasi)
+	if hapus != nil {
+		log.Println(fmt.Sprintf("Error menghapus file atau folder: %v", hapus))
+		return false
+	} else {
+		return true
+	}
+}
+
 // fungsi untuk dapatkan rincian hari tanggal
 func getInfoTanggal(t time.Time) (string, int, time.Month, int) {
 	hari := t.Weekday().String()
@@ -197,168 +242,69 @@ func getInfoTanggal(t time.Time) (string, int, time.Month, int) {
 	return hari, tanggal, bulan, tahun
 }
 
-// fungsi untuk auto-format table per-jurusan
-func buatTablePerJurusan(lokasiFolder string, namaJurusan string, hariTanggal string) string {
+// fungsi untuk baca waktu reservasi
+func bacaWaktuReservasi(namaFile string) (time.Time, error) {
 
-	// template untuk table header
-	templateNamaJurusan := fmt.Sprintf(`<div
-                class="text-center font-bold text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 py-3">
-                %v
-            </div>`, namaJurusan)
-
-	// dapatkan nama konselor
-	bacaPengaturanTxtString := bacaFileReturnString(namaFilePengaturan)
-	splitJurusan := splitFormatPengaturan(bacaPengaturanTxtString, "jurusan")
-	splitKonselor := splitFormatPengaturan(bacaPengaturanTxtString, "namakonselor")
-	namaKonselor := ""
-	for idxKonselor := range splitJurusan {
-		if splitJurusan[idxKonselor] == namaJurusan {
-			namaKonselor = splitKonselor[idxKonselor]
-			break
-		}
+	timeString := bacaFileReturnString(namaFile)
+	if timeString == "" {
+		return time.Time{}, fmt.Errorf("file waktu reservasi kosong")
 	}
-
-	// template untuk per-baris
-	var arrayTemplatePerBaris []string
-
-	isiFolderJurusan := bacaFolder(lokasiFolder + fmt.Sprintf("/%v", namaJurusan))
-	for idxJurusan := range isiFolderJurusan {
-
-		// baca file 'data_mahasiswa.txt' dari tiap folder jam konsul
-		var (
-			mhsNim  = ""
-			mhsNama = ""
-		)
-
-		dataMhs := bacaFileReturnString(lokasiFolder + fmt.Sprintf("/%v/%v", isiFolderJurusan[idxJurusan].Name(), namaFileDataMahasiswa))
-
-		if len(dataMhs) < 1 {
-			mhsNim = "Belum ada antrian"
-			mhsNama = "Belum ada antrian"
-		} else {
-			splitDataMhs := splitFormatPengaturan(dataMhs, "nimnama")
-			mhsNim = splitDataMhs[0]
-			mhsNama = splitDataMhs[1]
-		}
-
-		templatePerBaris := fmt.Sprintf(`<tr
-                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <th scope="row"
-                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                %v
-                            </th>
-                            <td class="px-6 py-4">
-                                %v
-                            </td>
-                            <td class="px-6 py-4">
-                                %v
-                            </td>
-                            <td class="px-6 py-4">
-                                %v
-                            </td>
-                            <td class="px-6 py-4">
-                                %v
-                            </td>
-                        </tr>`, hariTanggal, isiFolderJurusan[idxJurusan].Name(), namaKonselor, mhsNim, mhsNama)
-
-		arrayTemplatePerBaris = append(arrayTemplatePerBaris, templatePerBaris)
-
+	parsedTime, err := time.Parse(timeFormat, timeString)
+	if err != nil {
+		return time.Time{}, err
 	}
-
-	templateSeluruhKolom := ""
-	for idxBaris := range arrayTemplatePerBaris {
-		templateSeluruhKolom += arrayTemplatePerBaris[idxBaris]
-	}
-
-	templateTablePerJurusan := fmt.Sprintf(`<div class="flex flex-col rounded-lg overflow-hidden">
-            %v
-			
-            <div class="relative overflow-x-auto">
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" class="px-6 py-3">
-                                Hari Tanggal
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Jam Konsultasi
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Konselor
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                NIM
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                NAMA
-                            </th>
-                        </tr>
-                    </thead>
-					
-                    <tbody>
-                        %v
-                    </tbody>
-                </table>
-            </div>
-        </div>`, templateNamaJurusan, templateSeluruhKolom)
-
-	return templateTablePerJurusan
+	return parsedTime, nil
 }
 
-// fungsi untuk auto-generate table daftar antrian
-func buatDaftarAntrian() string {
+// fungsi cek apakah waktu reservasi sudah lebih dari 24 jam.
+// jika ya berarti sudah ganti hari, maka bisa replace dengan data baru.
+func bandingkanWaktuReservasi(waktuReservasi time.Time) bool {
+	waktuSekarang := time.Now()
+	waktuBerlalu := waktuSekarang.Sub(waktuReservasi)
+	if waktuBerlalu > 24*time.Hour {
+		return true
+	} else {
+		return false
+	}
+}
 
-	timenow := time.Now()
+// fungsi untuk simpan waktu reservasi
+func simpanWaktuReservasi(namaFile string) bool {
 
-	hariIni, hariIniTgl, hariIniBln, hariIniThn := getInfoTanggal(timenow)
+	// cek apakah file ada
+	if !cekApakahFileAda(namaFile) {
 
-	besok := timenow.AddDate(0, 0, 1)
-	hariBesok, hariBesokTgl, hariBesokBln, hariBesokThn := getInfoTanggal(besok)
+		waktuSekarang := time.Now()
+		timeString := waktuSekarang.Format(timeFormat)
+		bikinFileBaru(namaFile)
+		tulisStringKeFile(namaFile, timeString)
 
-	lusa := timenow.AddDate(0, 0, 2)
-	hariLusa, hariLusaTgl, hariLusaBln, hariLusaThn := getInfoTanggal(lusa)
+		// kalau ga error return 'true'
+		return true
+	} else {
 
-	templateSeluruhTable := ""
-	templateSeluruhHalaman := ""
-
-	// ngecek di dalem folder 'db' ada jurusan apa aja har ini
-	daftarJurusan := bacaFolder(folderDBHariIni)
-
-	// susun table daftar antrian
-	for i := 0; i < totalHari; i++ {
-
-		if i == 0 {
-			templateSeluruhTable += `<h4
-            class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-black">
-            Antrian <span
-                class="underline underline-offset-3 decoration-8 decoration-blue-400 dark:decoration-blue-600">hari
-                ini</span></h4>`
-		} else if i == 1 {
-			templateSeluruhTable += `<h4
-            class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-black">
-            Antrian <span
-                class="underline underline-offset-3 decoration-8 decoration-blue-400 dark:decoration-blue-600">besok</span></h4>`
-		} else if i == 2 {
-			templateSeluruhTable += `<h4
-            class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-black">
-            Antrian <span
-                class="underline underline-offset-3 decoration-8 decoration-blue-400 dark:decoration-blue-600">lusa</span></h4>`
+		// jika file sudah ada maka cek apakah sudah lebih dari 24 jam
+		getWaktu, err := bacaWaktuReservasi(namaFile)
+		if err != nil {
+			log.Println(fmt.Sprintf("Error membaca waktu reservasi: %v", err))
+			return false
 		}
 
-		for idxJurusan := range daftarJurusan {
-			if i == 0 {
-				templateSeluruhTable += buatTablePerJurusan(folderDBHariIni, daftarJurusan[idxJurusan].Name(), fmt.Sprintf("%v, %v %v %v", hariIni, hariIniTgl, hariIniBln, hariIniThn))
-			} else if i == 1 {
-				templateSeluruhTable += buatTablePerJurusan(folderDBHariIni, daftarJurusan[idxJurusan].Name(), fmt.Sprintf("%v, %v %v %v", hariBesok, hariBesokTgl, hariBesokBln, hariBesokThn))
-			} else if i == 2 {
-				templateSeluruhTable += buatTablePerJurusan(folderDBHariIni, daftarJurusan[idxJurusan].Name(), fmt.Sprintf("%v, %v %v %v", hariLusa, hariLusaTgl, hariLusaBln, hariLusaThn))
-			}
+		bolehReplace := bandingkanWaktuReservasi(getWaktu)
+		if bolehReplace {
 
-			templateSeluruhTable += "<br>"
+			hapusSemua(namaFile)
+
+			waktuSekarang := time.Now()
+			timeString := waktuSekarang.Format(timeFormat)
+			bikinFileBaru(namaFile)
+			tulisStringKeFile(namaFile, timeString)
+
+			return true
+		} else {
+			return false
 		}
+
 	}
 
-	templateSeluruhHalaman = strings.ReplaceAll(antrian, "(REPLACE-INI-DENGAN-TABLE)", templateSeluruhTable)
-
-	return templateSeluruhHalaman
 }

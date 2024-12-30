@@ -20,6 +20,14 @@ func cekPengaturan() {
 
 		fmt.Println("File pengaturan berhasil dibuat")
 
+	} else {
+		// kita baca dulu file "pengaturan.txt"
+		bacaPengaturanTxtString := bacaFileReturnString(namaFilePengaturan)
+		if len(bacaPengaturanTxtString) < 1 {
+			hapusSemua(namaFilePengaturan)
+			bikinFileBaru(namaFilePengaturan)
+			tulisStringKeFile(namaFilePengaturan, templateDefaultPengaturan)
+		}
 	}
 
 }
