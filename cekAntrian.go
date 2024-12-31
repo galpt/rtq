@@ -62,18 +62,21 @@ func buatTablePerJurusan(lokasiFolder string, namaJurusan string, hariTanggal st
 
 		if !cekApakahFileAda(lokasiWaktuRsvMhs) {
 			// File waktu reservasi tidak ada, berarti belum ada antrian
-			// Tetapkan nilai default untuk mhsNim, mhsNama, dan mhsJenisKonsul
+			// Nilai default sudah ditetapkan
 		} else {
 			// baca file "waktu_reservasi.txt"
 			waktuReservasi, err := bacaWaktuReservasi(lokasiWaktuRsvMhs)
 			if err != nil {
 				log.Printf("Error membaca waktu reservasi: %v\n", err)
-				// Tetapkan nilai default untuk mhsNim, mhsNama, dan mhsJenisKonsul
+				// Nilai default sudah ditetapkan
 			} else {
 				if bandingkanWaktuReservasi(waktuReservasi) {
 					// jika waktu reservasi mahasiswa sudah lebih dari 24 jam,
-					// maka sudah kadaluarsa dan bisa diabaikan
-					// Tetapkan nilai default untuk mhsNim, mhsNama, dan mhsJenisKonsul
+					// maka sudah kadaluarsa dan hapus semua file terkait
+					hapusSemua(lokasiWaktuRsvMhs)
+					hapusSemua(lokasiDataMhs)
+					hapusSemua(lokasiJenisKonsulMhs)
+					// Nilai default untuk mhsNim, mhsNama, dan mhsJenisKonsul tetap "Belum ada antrian"
 				} else {
 					// baca file "data_mahasiswa.txt"
 					dataMhs := bacaFileReturnString(lokasiDataMhs)
@@ -87,7 +90,7 @@ func buatTablePerJurusan(lokasiFolder string, namaJurusan string, hariTanggal st
 							// baca file "jenis_konsul.txt"
 							mhsJenisKonsul = bacaFileReturnString(lokasiJenisKonsulMhs)
 							if len(mhsJenisKonsul) < 1 {
-								// Tetapkan nilai default untuk mhsNim, mhsNama, dan mhsJenisKonsul
+								// Nilai default sudah ditetapkan
 							}
 						}
 					}
