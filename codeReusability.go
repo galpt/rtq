@@ -242,6 +242,60 @@ func getInfoTanggal(t time.Time) (string, int, time.Month, int) {
 	return hari, tanggal, bulan, tahun
 }
 
+// fungsi untuk translate hari ke bahasa indonesia
+func translateHari(hari string) string {
+	switch hari {
+	case "Monday":
+		return "Senin"
+	case "Tuesday":
+		return "Selasa"
+	case "Wednesday":
+		return "Rabu"
+	case "Thursday":
+		return "Kamis"
+	case "Friday":
+		return "Jumat"
+	case "Saturday":
+		return "Sabtu"
+	case "Sunday":
+		return "Minggu"
+	default:
+		return hari // Jika tidak ada yang cocok, kembalikan hari asli
+	}
+}
+
+// fungsi untuk translate bulan ke bahasa indonesia
+func translateBulan(bulan time.Month) string {
+	switch bulan {
+	case time.January:
+		return "Januari"
+	case time.February:
+		return "Februari"
+	case time.March:
+		return "Maret"
+	case time.April:
+		return "April"
+	case time.May:
+		return "Mei"
+	case time.June:
+		return "Juni"
+	case time.July:
+		return "Juli"
+	case time.August:
+		return "Agustus"
+	case time.September:
+		return "September"
+	case time.October:
+		return "Oktober"
+	case time.November:
+		return "November"
+	case time.December:
+		return "Desember"
+	default:
+		return bulan.String() // Jika tidak ada yang cocok, kembalikan bulan asli
+	}
+}
+
 // fungsi untuk baca waktu reservasi
 func bacaWaktuReservasi(namaFile string) (time.Time, error) {
 

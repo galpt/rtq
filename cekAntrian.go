@@ -174,12 +174,18 @@ func buatDaftarAntrian(notifikasi string) string {
 	timenow := time.Now()
 
 	hariIni, hariIniTgl, hariIniBln, hariIniThn := getInfoTanggal(timenow)
+	hariIniIndo := translateHari(hariIni)
+	bulanIniIndo := translateBulan(hariIniBln)
 
 	besok := timenow.AddDate(0, 0, 1)
 	hariBesok, hariBesokTgl, hariBesokBln, hariBesokThn := getInfoTanggal(besok)
+	hariBesokIndo := translateHari(hariBesok)
+	bulanBesokIndo := translateBulan(hariBesokBln)
 
 	lusa := timenow.AddDate(0, 0, 2)
 	hariLusa, hariLusaTgl, hariLusaBln, hariLusaThn := getInfoTanggal(lusa)
+	hariLusaIndo := translateHari(hariLusa)
+	bulanLusaIndo := translateBulan(hariLusaBln)
 
 	templateSeluruhTable := notifikasi
 
@@ -237,11 +243,11 @@ func buatDaftarAntrian(notifikasi string) string {
 
 		for idxJurusan := range daftarJurusan {
 			if i == 0 {
-				templateSeluruhTable += buatTablePerJurusan(folderDBHariIni, daftarJurusan[idxJurusan].Name(), fmt.Sprintf("%v, %v %v %v", hariIni, hariIniTgl, hariIniBln, hariIniThn))
+				templateSeluruhTable += buatTablePerJurusan(folderDBHariIni, daftarJurusan[idxJurusan].Name(), fmt.Sprintf("%v, %v %v %v", hariIniIndo, hariIniTgl, bulanIniIndo, hariIniThn))
 			} else if i == 1 {
-				templateSeluruhTable += buatTablePerJurusan(folderDBBesok, daftarJurusan[idxJurusan].Name(), fmt.Sprintf("%v, %v %v %v", hariBesok, hariBesokTgl, hariBesokBln, hariBesokThn))
+				templateSeluruhTable += buatTablePerJurusan(folderDBBesok, daftarJurusan[idxJurusan].Name(), fmt.Sprintf("%v, %v %v %v", hariBesokIndo, hariBesokTgl, bulanBesokIndo, hariBesokThn))
 			} else if i == 2 {
-				templateSeluruhTable += buatTablePerJurusan(folderDBLusa, daftarJurusan[idxJurusan].Name(), fmt.Sprintf("%v, %v %v %v", hariLusa, hariLusaTgl, hariLusaBln, hariLusaThn))
+				templateSeluruhTable += buatTablePerJurusan(folderDBLusa, daftarJurusan[idxJurusan].Name(), fmt.Sprintf("%v, %v %v %v", hariLusaIndo, hariLusaTgl, bulanLusaIndo, hariLusaThn))
 			}
 
 			templateSeluruhTable += "<br>"
