@@ -1,6 +1,9 @@
+// templates.go
 package main
 
-import "time"
+import (
+	"time"
+)
 
 // bagian ini untuk semua data yang bersifat template
 
@@ -86,6 +89,71 @@ jamkonsul=[09.00-09.45|09.45-10.30|10.30-11.15|11.15-12.00|13.00-13.45|13.45-14.
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar Konsultasi</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        function openModal(modalId) {
+            const nim = document.getElementById('nim').value;
+            const nama = document.getElementById('name').value;
+            const jurusan = document.getElementById('major').value;
+            const jamKonsul = document.getElementById('jam_konsultasi').value;
+            const jenisKonsul = document.getElementById('jenis_konsultasi').value;
+
+            document.getElementById('modalNim').textContent = nim;
+            document.getElementById('modalNama').textContent = nama;
+            document.getElementById('modalJurusan').textContent = jurusan;
+            document.getElementById('modalJamKonsul').textContent = formatJamKonsul(jamKonsul);
+            document.getElementById('modalJenisKonsul').textContent = capitalizeFirstLetter(jenisKonsul);
+			
+			document.getElementById(modalId).style.display = 'block';
+            document.getElementsByTagName('body')[0].classList.add('overflow-y-hidden');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.getElementsByTagName('body')[0].classList.remove('overflow-y-hidden');
+        }
+	
+	    function submitForm() {
+		    document.getElementById('action').value = 'konfirmasi';
+		    document.getElementById('daftarForm').submit();
+	    }
+	
+		function formatJamKonsul(jamKonsul) {
+			const parts = jamKonsul.split('|');
+			if (parts.length === 2) {
+				const hari = parts[0];
+				const jam = parts[1];
+				
+				let hariFormatted = "";
+				if (hari === "hariini") {
+					hariFormatted = "Hari Ini";
+				} else if (hari === "besok") {
+					hariFormatted = "Besok";
+				} else if (hari === "lusa") {
+					hariFormatted = "Lusa";
+				}
+				
+				return hariFormatted + ", " + jam;
+			}
+			return jamKonsul;
+		}
+		
+		function capitalizeFirstLetter(string) {
+			return string.charAt(0).toUpperCase() + string.slice(1);
+		}
+	
+        // Close all modals when press ESC
+        document.onkeydown = function(event) {
+            event = event || window.event;
+            if (event.keyCode === 27) {
+                document.getElementsByTagName('body')[0].classList.remove('overflow-y-hidden');
+                let modals = document.getElementsByClassName('modal');
+                Array.prototype.slice.call(modals).forEach(i => {
+                    i.style.display = 'none';
+                });
+            }
+        };
+    </script>
 </head>
 
 <body class="min-h-screen bg-gradient-to-br from-blue-400 to-blue-600 p-4">
@@ -95,52 +163,60 @@ jamkonsul=[09.00-09.45|09.45-10.30|10.30-11.15|11.15-12.00|13.00-13.45|13.45-14.
             <h1 class="text-2xl font-bold">Daftar Konsultasi</h1>
         </div>
 
-        <form class="space-y-6" action="/daftar" method="post">
-            <!-- NIM Input -->
-            <div class="space-y-2">
-                <label for="nim" class="block text-sm font-medium text-gray-700">
-                    NIM (Nomor Induk Mahasiswa)
-                </label>
-                <input type="text" id="nim" name="nim"
-                    class="w-full rounded-lg border-2 border-gray-200 p-3 text-gray-700 focus:border-blue-500 focus:outline-none transition duration-200"
-                    placeholder="Masukkan NIM" required>
-            </div>
-
-            <!-- Name Input -->
-            <div class="space-y-2">
-                <label for="name" class="block text-sm font-medium text-gray-700">
-                    Nama
-                </label>
-                <input type="text" id="name" name="name"
-                    class="w-full rounded-lg border-2 border-gray-200 p-3 text-gray-700 focus:border-blue-500 focus:outline-none transition duration-200"
-                    placeholder="Masukkan nama lengkap" required>
-            </div>
-
-            (REPLACE-INI-DENGAN-DROPDOWN-MENU)
-
-            <!-- Pilih jenis konsultasi -->
-            <div class="space-y-2">
-                <label for="jenis_konsultasi" class="block text-sm font-medium text-gray-700">
-                    Jenis Konsultasi
-                </label>
-                <select id="jenis_konsultasi" name="jenis_konsultasi"
-                    class="w-full rounded-lg border-2 border-gray-200 p-3 text-gray-700 focus:border-blue-500 focus:outline-none transition duration-200"
-                    required>
-                    <option value="" disabled>Pilih jenis konsultasi</option>
-                    <option value="akademik">Akademik</option>
-                    <option value="non-akademik">Non-akademik</option>
-                </select>
-            </div>
-
-            <!-- Tombol daftar -->
-            <div class="mt-8">
-                <button type="submit" formmethod="post" type="button"
-                    class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 transform hover:-translate-y-1 hover:shadow-lg">
-                    Daftar
-                </button>
-            </div>
+        <form id="daftarForm" class="space-y-6" action="/daftar" method="post">
             
+            (REPLACE-INI-DENGAN-FORM-INPUT)
+			
+			<div class="mt-6">
+				<button type="button" onclick="openModal('modelConfirm')"
+					class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 transform hover:-translate-y-1 hover:shadow-lg">
+					Daftar
+				</button>
+			</div>
+			
+			<input type="hidden" id="action" name="action" value="">
         </form>
+		
+		<div id="modelConfirm" class="fixed hidden z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4 ">
+		<div class="relative top-40 mx-auto shadow-xl rounded-md bg-white max-w-md">
+			<div class="flex justify-end p-2">
+				<button onclick="closeModal('modelConfirm')" type="button"
+					class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center">
+					<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+						<path fill-rule="evenodd"
+							d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+							clip-rule="evenodd"></path>
+					</svg>
+				</button>
+			</div>
+			<div class="p-6 pt-0 text-center">
+				<svg class="w-20 h-20 text-yellow-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+					xmlns="http://www.w3.org/2000/svg">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+						d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+				</svg>
+				<h3 class="text-xl font-normal text-gray-500 mt-5 mb-6">Apakah data berikut sudah benar?</h3>
+				
+				<div class="text-left space-y-2 mb-4">
+					<p><span class="font-semibold">NIM:</span> <span id="modalNim"></span></p>
+					<p><span class="font-semibold">Nama:</span> <span id="modalNama"></span></p>
+					<p><span class="font-semibold">Jurusan:</span> <span id="modalJurusan"></span></p>
+					<p><span class="font-semibold">Jam Konsultasi:</span> <span id="modalJamKonsul"></span></p>
+					<p><span class="font-semibold">Jenis Konsultasi:</span> <span id="modalJenisKonsul"></span></p>
+				</div>
+
+				<button onclick="submitForm()"
+					class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2">
+					Ya, daftarkan saya
+				</button>
+				<button onclick="closeModal('modelConfirm')"
+					class="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-cyan-200 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center"
+					data-modal-toggle="delete-user-modal">
+					Ubah data
+				</button>
+			</div>
+		</div>
+	</div>
     </div>
 </body>
 
@@ -215,4 +291,45 @@ jamkonsul=[09.00-09.45|09.45-10.30|10.30-11.15|11.15-12.00|13.00-13.45|13.45-14.
                     class="font-semibold underline hover:no-underline">Refresh kembali</a>.
             </div>
         </div>`
+
+	modalKonfirmasi = `<div id="modelConfirm" class="fixed hidden z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4 ">
+		<div class="relative top-40 mx-auto shadow-xl rounded-md bg-white max-w-md">
+			<div class="flex justify-end p-2">
+				<button onclick="closeModal('modelConfirm')" type="button"
+					class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center">
+					<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+						<path fill-rule="evenodd"
+							d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+							clip-rule="evenodd"></path>
+					</svg>
+				</button>
+			</div>
+			<div class="p-6 pt-0 text-center">
+				<svg class="w-20 h-20 text-yellow-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+					xmlns="http://www.w3.org/2000/svg">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+						d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+				</svg>
+				<h3 class="text-xl font-normal text-gray-500 mt-5 mb-6">Apakah data berikut sudah benar?</h3>
+				
+				<div class="text-left space-y-2 mb-4">
+					<p><span class="font-semibold">NIM:</span> <span id="modalNim"></span></p>
+					<p><span class="font-semibold">Nama:</span> <span id="modalNama"></span></p>
+					<p><span class="font-semibold">Jurusan:</span> <span id="modalJurusan"></span></p>
+					<p><span class="font-semibold">Jam Konsultasi:</span> <span id="modalJamKonsul"></span></p>
+					<p><span class="font-semibold">Jenis Konsultasi:</span> <span id="modalJenisKonsul"></span></p>
+				</div>
+
+				<button onclick="submitForm()"
+					class="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2">
+					Ya, daftarkan saya
+				</button>
+				<button onclick="closeModal('modelConfirm')"
+					class="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-cyan-200 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center"
+					data-modal-toggle="delete-user-modal">
+					Ubah data
+				</button>
+			</div>
+		</div>
+	</div>`
 )

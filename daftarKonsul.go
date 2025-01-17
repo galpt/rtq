@@ -1,3 +1,4 @@
+// daftarKonsul.go
 package main
 
 import (
@@ -29,13 +30,13 @@ func munculkanHalamanPendaftaran() string {
 	if len(splitJurusan) == 0 {
 		fmt.Println("Error: Tidak ada data jurusan di konfigurasi.")
 		// Atau return string error ke pengguna
-		return replaceSemua(daftar, "(REPLACE-INI-DENGAN-DROPDOWN-MENU)", "<p>Konfigurasi tidak valid.</p>")
+		return replaceSemua(daftar, "(REPLACE-INI-DENGAN-FORM-INPUT)", "<p>Konfigurasi tidak valid.</p>")
 	}
 
 	if len(splitJamKonsul) == 0 {
 		fmt.Println("Error: Tidak ada data jam konsultasi di konfigurasi.")
 		// Atau return string error ke pengguna
-		return replaceSemua(daftar, "(REPLACE-INI-DENGAN-DROPDOWN-MENU)", "<p>Konfigurasi tidak valid.</p>")
+		return replaceSemua(daftar, "(REPLACE-INI-DENGAN-FORM-INPUT)", "<p>Konfigurasi tidak valid.</p>")
 
 	}
 
@@ -64,7 +65,28 @@ func munculkanHalamanPendaftaran() string {
 		}
 	}
 
-	halamanPendaftaran := fmt.Sprintf(`<!-- Major Select -->
+	halamanPendaftaran := fmt.Sprintf(`
+            <!-- NIM Input -->
+            <div class="space-y-2">
+                <label for="nim" class="block text-sm font-medium text-gray-700">
+                    NIM (Nomor Induk Mahasiswa)
+                </label>
+                <input type="text" id="nim" name="nim"
+                    class="w-full rounded-lg border-2 border-gray-200 p-3 text-gray-700 focus:border-blue-500 focus:outline-none transition duration-200"
+                    placeholder="Masukkan NIM" required>
+            </div>
+
+            <!-- Name Input -->
+            <div class="space-y-2">
+                <label for="name" class="block text-sm font-medium text-gray-700">
+                    Nama
+                </label>
+                <input type="text" id="name" name="name"
+                    class="w-full rounded-lg border-2 border-gray-200 p-3 text-gray-700 focus:border-blue-500 focus:outline-none transition duration-200"
+                    placeholder="Masukkan nama lengkap" required>
+            </div>
+
+            <!-- Major Select -->
             <div class="space-y-2">
                 <label for="major" class="block text-sm font-medium text-gray-700">
                     Jurusan
@@ -86,13 +108,32 @@ func munculkanHalamanPendaftaran() string {
                     required>
                     %v
                 </select>
-            </div>`, semuaJurusanStr, semuaJamKonsulStr)
+            </div>
+			
+			<!-- Pilih jenis konsultasi -->
+            <div class="space-y-2">
+                <label for="jenis_konsultasi" class="block text-sm font-medium text-gray-700">
+                    Jenis Konsultasi
+                </label>
+                <select id="jenis_konsultasi" name="jenis_konsultasi"
+                    class="w-full rounded-lg border-2 border-gray-200 p-3 text-gray-700 focus:border-blue-500 focus:outline-none transition duration-200"
+                    required>
+                    <option value="" disabled>Pilih jenis konsultasi</option>
+                    <option value="akademik">Akademik</option>
+                    <option value="non-akademik">Non-akademik</option>
+                </select>
+            </div>
+			`, semuaJurusanStr, semuaJamKonsulStr)
 
-	return replaceSemua(daftar, "(REPLACE-INI-DENGAN-DROPDOWN-MENU)", halamanPendaftaran)
+	return replaceSemua(daftar, "(REPLACE-INI-DENGAN-FORM-INPUT)", halamanPendaftaran)
 }
 
 // fungsi untuk cek apakah sudah ada antrian atau belum
-func simpanAntrian(nim string, nama string, jurusan string, jamkonsulInput string, jeniskonsul string) string {
+func simpanAntrian(nim string, nama string, jurusan string, jamkonsulInput string, jeniskonsul string, action string) string {
+	if action != "konfirmasi" {
+		return buatDaftarAntrian(alertGagalDaftarKonsul)
+	}
+
 	if lockAntrian {
 		return buatDaftarAntrian(alertGagalDaftarKonsul)
 	}

@@ -1,3 +1,4 @@
+// server.go
 package main
 
 import (
@@ -35,12 +36,17 @@ func startServer() {
 
 	// untuk handle user yang ingin daftar konsul
 	r.POST("/daftar", func(c *gin.Context) {
-
 		// parsing data dari form
 		var form FormDaftarKonsul
 		c.Bind(&form)
 
-		c.Data(http.StatusOK, "text/html; charset=utf-8", stb(simpanAntrian(form.Nim, strings.ToUpper(form.Nama), form.Jurusan, form.JamKonsul, strings.ToUpper(form.JenisKonsul))))
+		action := c.PostForm("action")
+		if action == "" {
+			c.Data(http.StatusOK, "text/html; charset=utf-8", stb(simpanAntrian(form.Nim, strings.ToUpper(form.Nama), form.Jurusan, form.JamKonsul, strings.ToUpper(form.JenisKonsul), "")))
+		} else {
+			c.Data(http.StatusOK, "text/html; charset=utf-8", stb(simpanAntrian(form.Nim, strings.ToUpper(form.Nama), form.Jurusan, form.JamKonsul, strings.ToUpper(form.JenisKonsul), action)))
+		}
+
 	})
 
 	fmt.Println()
