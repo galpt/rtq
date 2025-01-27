@@ -46,8 +46,25 @@ func startServer() {
 		} else {
 			c.Data(http.StatusOK, "text/html; charset=utf-8", stb(simpanAntrian(form.Nim, strings.ToUpper(form.Nama), form.Jurusan, form.JamKonsul, strings.ToUpper(form.JenisKonsul), action)))
 		}
-
 	})
+
+	// untuk munculkan halaman login admin
+	r.GET("/admin/login", func(c *gin.Context) {
+		c.Data(http.StatusOK, "text/html; charset=utf-8", stb(loginAdmin))
+	})
+
+	// untuk handle login admin
+	// r.POST("/admin/dashboard", func(c *gin.Context) {
+	// 	// parsing data dari form
+	// 	var form LoginAdminForm
+	// 	c.Bind(&form)
+
+	// 	if form.Username == "admin" && form.Password == "admin123" {
+	// 		c.Data(http.StatusOK, "text/html; charset=utf-8", stb(dashboardAdmin))
+	// 	} else {
+	// 		c.Redirect(http.StatusSeeOther, "/admin/login")
+	// 	}
+	// })
 
 	fmt.Println()
 	fmt.Println(fmt.Sprintf("Server jalan di %v", listenAddr))

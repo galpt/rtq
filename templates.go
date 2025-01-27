@@ -332,4 +332,106 @@ jamkonsul=[09.00-09.45|09.45-10.30|10.30-11.15|11.15-12.00|13.00-13.45|13.45-14.
 			</div>
 		</div>
 	</div>`
+
+	loginAdmin = `<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('form');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const loginButton = document.querySelector('button[type="submit"]');
+
+            form.addEventListener('submit', function (event) {
+                let isValid = true;
+
+                // Reset error messages
+                const errorMessages = document.querySelectorAll('.error-message');
+                errorMessages.forEach(msg => msg.remove());
+
+                // Validate username
+                if (usernameInput.value.trim() === '') {
+                    displayError(usernameInput, 'Username wajib diisi');
+                    isValid = false;
+                }
+
+                // Validate password
+                if (passwordInput.value.trim() === '') {
+                    displayError(passwordInput, 'Password wajib diisi');
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    event.preventDefault(); // Prevent form submission if validation fails
+                } else {
+                    // Provide feedback that login is in progress
+                    loginButton.disabled = true;
+                    loginButton.innerHTML = 'Sedang masuk...';
+                }
+            });
+
+            function displayError(inputField, message) {
+                const errorMessage = document.createElement('p');
+                errorMessage.textContent = message;
+                errorMessage.classList.add('text-red-500', 'text-sm', 'mt-1', 'error-message');
+                inputField.parentNode.insertBefore(errorMessage, inputField.nextSibling);
+                inputField.classList.add('border-red-500');
+            }
+        });
+    </script>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-blue-400 to-blue-600 p-4 flex items-center justify-center">
+    <div class="max-w-md w-full bg-white/95 rounded-xl shadow-xl p-6 md:p-8">
+        <!-- Header -->
+        <div class="bg-blue-800 text-white p-4 rounded-lg mb-8 text-center">
+            <h1 class="text-2xl font-bold">Login Admin</h1>
+        </div>
+
+        <form class="space-y-6" action="/admin/dashboard" method="post">
+            <!-- Username Input -->
+            <div class="space-y-2">
+                <label for="username" class="block text-sm font-medium text-gray-700">
+                    Username
+                </label>
+                <input type="text" id="username" name="username"
+                    class="w-full rounded-lg border-2 border-gray-200 p-3 text-gray-700 focus:border-blue-500 focus:outline-none transition duration-200"
+                    placeholder="Masukkan username" required>
+            </div>
+
+            <!-- Password Input -->
+            <div class="space-y-2">
+                <label for="password" class="block text-sm font-medium text-gray-700">
+                    Password
+                </label>
+                <input type="password" id="password" name="password"
+                    class="w-full rounded-lg border-2 border-gray-200 p-3 text-gray-700 focus:border-blue-500 focus:outline-none transition duration-200"
+                    placeholder="Masukkan password" required>
+            </div>
+
+            <!-- Error Message (Initially Hidden) -->
+            <div id="error-message" class="hidden text-red-500 text-sm"></div>
+
+            <div class="mt-6">
+                <button type="submit"
+                    class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 transform hover:-translate-y-1 hover:shadow-lg">
+                    Masuk
+                </button>
+            </div>
+        </form>
+
+        <!-- Forgot Password Link -->
+        <div class="text-center mt-4">
+            <a href="#" class="text-sm text-blue-500 hover:underline">Lupa password?</a>
+        </div>
+    </div>
+</body>
+
+</html>`
 )
