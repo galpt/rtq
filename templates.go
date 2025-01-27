@@ -92,11 +92,37 @@ jamkonsul=[09.00-09.45|09.45-10.30|10.30-11.15|11.15-12.00|13.00-13.45|13.45-14.
 
     <script>
         function openModal(modalId) {
-            const nim = document.getElementById('nim').value;
-            const nama = document.getElementById('name').value;
+			const nimInput = document.getElementById('nim');
+            const nim = nimInput.value.trim();
+			const nameInput = document.getElementById('name');
+            const nama = nameInput.value.trim();
             const jurusan = document.getElementById('major').value;
             const jamKonsul = document.getElementById('jam_konsultasi').value;
             const jenisKonsul = document.getElementById('jenis_konsultasi').value;
+			
+			const errorMessages = document.querySelectorAll('.error-message');
+            errorMessages.forEach(msg => msg.remove());
+            nimInput.classList.remove('border-red-500');
+			nameInput.classList.remove('border-red-500');
+
+            let isValid = true;
+
+            if (nim === '') {
+                displayError(nimInput, 'NIM wajib diisi');
+                isValid = false;
+            } else if (!/^\d+$/.test(nim)) {
+                displayError(nimInput, 'NIM harus berupa angka');
+                isValid = false;
+            }
+			
+			if (nama === '') {
+                displayError(nameInput, 'Nama wajib diisi');
+                isValid = false;
+            }
+			
+			if (!isValid) {
+				return;
+			}
 
             document.getElementById('modalNim').textContent = nim;
             document.getElementById('modalNama').textContent = nama;
