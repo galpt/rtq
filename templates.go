@@ -465,7 +465,7 @@ jamkonsul=[09.00-09.45|09.45-10.30|10.30-11.15|11.15-12.00|13.00-13.45|13.45-14.
 </head>
 
 <body class="min-h-screen bg-gradient-to-br from-blue-400 to-blue-600 p-4">
-    <div class="max-w-xl mx-auto mt-10 bg-white/95 rounded-xl shadow-xl p-6 md:p-8">
+    <div class="max-w-4xl mx-auto mt-10 bg-white/95 rounded-xl shadow-xl p-6 md:px-8">
         <!-- Header -->
         <div class="bg-blue-800 text-white p-4 rounded-lg mb-8 text-center">
             <h1 class="text-2xl font-bold">Dasbor Admin</h1>
@@ -474,14 +474,28 @@ jamkonsul=[09.00-09.45|09.45-10.30|10.30-11.15|11.15-12.00|13.00-13.45|13.45-14.
         <!-- Navigation -->
         <nav class="mb-8">
             <ul class="flex space-x-4 justify-center">
-                <li><a href="/admin/dashboard" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">Dasbor</a></li>
                 <li><a href="/antrian" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg transition duration-200">Daftar Antrian</a></li>
             </ul>
         </nav>
 
         <!-- Content Area -->
-        <div class="bg-gray-100 p-4 rounded-lg">
-            <p>Selamat datang di dasbor admin!</p>
+        <div class="bg-gray-100 p-4 rounded-lg space-y-6">
+            <h2 class="text-xl font-semibold text-gray-700">Notifikasi Real-Time</h2>
+            <div class="bg-white p-3 rounded shadow">
+                <p class="text-gray-600">Belum ada notifikasi.</p>
+            </div>
+
+            <h2 class="text-xl font-semibold text-gray-700">Manajemen Akun</h2>
+            <div class="bg-white p-3 rounded shadow">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Tambah Akun
+                </button>
+            </div>
+
+            <h2 class="text-xl font-semibold text-gray-700">Pengaturan Jadwal</h2>
+            <div class="bg-white p-3 rounded shadow">
+                <p class="text-gray-600">Fitur ini masih dalam pengembangan.</p>
+            </div>
         </div>
     </div>
 </body>

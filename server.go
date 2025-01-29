@@ -89,6 +89,11 @@ func startServer() {
 
 	// untuk munculkan halaman dashboard admin
 	r.GET("/admin/dashboard", func(c *gin.Context) {
+		// cek apakah user sudah login atau belum
+		// jika belum, redirect ke halaman login
+		// if user not logged in, redirect to login page
+		// TODO: implement session management
+
 		c.Data(http.StatusOK, "text/html; charset=utf-8", stb(dashboardAdmin))
 	})
 
