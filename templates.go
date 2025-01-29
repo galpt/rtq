@@ -416,15 +416,15 @@ jamkonsul=[09.00-09.45|09.45-10.30|10.30-11.15|11.15-12.00|13.00-13.45|13.45-14.
         </div>
 
         <!-- Login Form -->
-        <form class="space-y-6" action="/admin/dashboard" method="get">
-            <!-- Email Input -->
+        <form class="space-y-6" action="/admin/login" method="post">
+            <!-- Username Input -->
             <div class="space-y-2">
-                <label for="email" class="block text-sm font-medium text-gray-700">
-                    Email
+                <label for="username" class="block text-sm font-medium text-gray-700">
+                    Username
                 </label>
-                <input type="email" id="email" name="email"
+                <input type="text" id="username" name="username"
                     class="w-full rounded-lg border-2 border-gray-200 p-3 text-gray-700 focus:border-blue-500 focus:outline-none transition duration-200"
-                    placeholder="Masukkan email" required>
+                    placeholder="Masukkan username" required>
             </div>
 
             <!-- Password Input -->
