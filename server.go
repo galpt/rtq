@@ -53,18 +53,10 @@ func startServer() {
 		c.Data(http.StatusOK, "text/html; charset=utf-8", stb(loginAdmin))
 	})
 
-	// untuk handle login admin
-	// r.POST("/admin/dashboard", func(c *gin.Context) {
-	// 	// parsing data dari form
-	// 	var form LoginAdminForm
-	// 	c.Bind(&form)
-
-	// 	if form.Username == "admin" && form.Password == "admin123" {
-	// 		c.Data(http.StatusOK, "text/html; charset=utf-8", stb(dashboardAdmin))
-	// 	} else {
-	// 		c.Redirect(http.StatusSeeOther, "/admin/login")
-	// 	}
-	// })
+	// untuk munculkan halaman dashboard admin
+	r.GET("/admin/dashboard", func(c *gin.Context) {
+		c.Data(http.StatusOK, "text/html; charset=utf-8", stb(dashboardAdmin))
+	})
 
 	fmt.Println()
 	fmt.Println(fmt.Sprintf("Server jalan di %v", listenAddr))

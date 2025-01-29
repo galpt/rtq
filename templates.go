@@ -47,7 +47,7 @@ jamkonsul=[09.00-09.45|09.45-10.30|10.30-11.15|11.15-12.00|13.00-13.45|13.45-14.
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Beranda</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -70,7 +70,7 @@ jamkonsul=[09.00-09.45|09.45-10.30|10.30-11.15|11.15-12.00|13.00-13.45|13.45-14.
 
             <a href="http://localhost:8080/daftar">
                 <button type="button"
-                    class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 transform hover:-translate-y-1 hover:shadow-lg">
+                    class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 transform hover:-translate-y-1 hover:shadow-lg">
                     Daftar Konsultasi
                 </button>
             </a>
@@ -285,11 +285,7 @@ jamkonsul=[09.00-09.45|09.45-10.30|10.30-11.15|11.15-12.00|13.00-13.45|13.45-14.
 				</button>
 			</div>
 		</div>
-	</div>
-    </div>
-</body>
-
-</html>`
+	</div>`
 
 	antrian = `<!DOCTYPE html>
 <html lang="en">
@@ -408,70 +404,27 @@ jamkonsul=[09.00-09.45|09.45-10.30|10.30-11.15|11.15-12.00|13.00-13.45|13.45-14.
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Admin</title>
+    <title>Masuk Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const form = document.querySelector('form');
-            const usernameInput = document.getElementById('username');
-            const passwordInput = document.getElementById('password');
-            const loginButton = document.querySelector('button[type="submit"]');
-
-            form.addEventListener('submit', function (event) {
-                let isValid = true;
-
-                // Reset error messages
-                const errorMessages = document.querySelectorAll('.error-message');
-                errorMessages.forEach(msg => msg.remove());
-
-                // Validate username
-                if (usernameInput.value.trim() === '') {
-                    displayError(usernameInput, 'Username wajib diisi');
-                    isValid = false;
-                }
-
-                // Validate password
-                if (passwordInput.value.trim() === '') {
-                    displayError(passwordInput, 'Password wajib diisi');
-                    isValid = false;
-                }
-
-                if (!isValid) {
-                    event.preventDefault(); // Prevent form submission if validation fails
-                } else {
-                    // Provide feedback that login is in progress
-                    loginButton.disabled = true;
-                    loginButton.innerHTML = 'Sedang masuk...';
-                }
-            });
-
-            function displayError(inputField, message) {
-                const errorMessage = document.createElement('p');
-                errorMessage.textContent = message;
-                errorMessage.classList.add('text-red-500', 'text-sm', 'mt-1', 'error-message');
-                inputField.parentNode.insertBefore(errorMessage, inputField.nextSibling);
-                inputField.classList.add('border-red-500');
-            }
-        });
-    </script>
 </head>
 
-<body class="min-h-screen bg-gradient-to-br from-blue-400 to-blue-600 p-4 flex items-center justify-center">
-    <div class="max-w-md w-full bg-white/95 rounded-xl shadow-xl p-6 md:p-8">
+<body class="min-h-screen bg-gradient-to-br from-blue-400 to-blue-600 p-4">
+    <div class="max-w-xl mx-auto mt-10 bg-white/95 rounded-xl shadow-xl p-6 md:p-8">
         <!-- Header -->
         <div class="bg-blue-800 text-white p-4 rounded-lg mb-8 text-center">
-            <h1 class="text-2xl font-bold">Login Admin</h1>
+            <h1 class="text-2xl font-bold">Masuk Admin</h1>
         </div>
 
-        <form class="space-y-6" action="/admin/dashboard" method="post">
-            <!-- Username Input -->
+        <!-- Login Form -->
+        <form class="space-y-6" action="/admin/dashboard" method="get">
+            <!-- Email Input -->
             <div class="space-y-2">
-                <label for="username" class="block text-sm font-medium text-gray-700">
-                    Username
+                <label for="email" class="block text-sm font-medium text-gray-700">
+                    Email
                 </label>
-                <input type="text" id="username" name="username"
+                <input type="email" id="email" name="email"
                     class="w-full rounded-lg border-2 border-gray-200 p-3 text-gray-700 focus:border-blue-500 focus:outline-none transition duration-200"
-                    placeholder="Masukkan username" required>
+                    placeholder="Masukkan email" required>
             </div>
 
             <!-- Password Input -->
@@ -484,20 +437,51 @@ jamkonsul=[09.00-09.45|09.45-10.30|10.30-11.15|11.15-12.00|13.00-13.45|13.45-14.
                     placeholder="Masukkan password" required>
             </div>
 
-            <!-- Error Message (Initially Hidden) -->
-            <div id="error-message" class="hidden text-red-500 text-sm"></div>
-
+            <!-- Submit Button -->
             <div class="mt-6">
                 <button type="submit"
                     class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 transform hover:-translate-y-1 hover:shadow-lg">
                     Masuk
                 </button>
             </div>
+			
+			<div class="mt-4 text-sm text-center">
+				<a href="#" class="text-blue-500 hover:underline">Lupa Password?</a>
+			</div>
         </form>
+    </div>
+</body>
 
-        <!-- Forgot Password Link -->
-        <div class="text-center mt-4">
-            <a href="#" class="text-sm text-blue-500 hover:underline">Lupa password?</a>
+</html>`
+
+	dashboardAdmin = `<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dasbor Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-blue-400 to-blue-600 p-4">
+    <div class="max-w-xl mx-auto mt-10 bg-white/95 rounded-xl shadow-xl p-6 md:p-8">
+        <!-- Header -->
+        <div class="bg-blue-800 text-white p-4 rounded-lg mb-8 text-center">
+            <h1 class="text-2xl font-bold">Dasbor Admin</h1>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="mb-8">
+            <ul class="flex space-x-4 justify-center">
+                <li><a href="/admin/dashboard" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">Dasbor</a></li>
+                <li><a href="/antrian" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg transition duration-200">Daftar Antrian</a></li>
+            </ul>
+        </nav>
+
+        <!-- Content Area -->
+        <div class="bg-gray-100 p-4 rounded-lg">
+            <p>Selamat datang di dasbor admin!</p>
         </div>
     </div>
 </body>
